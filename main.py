@@ -3,6 +3,7 @@ import sys
 
 import pygame
 import random
+import Pawn
 from PySide6.QtWidgets import QApplication, QWidget, QPushButton, QSlider,QLabel
 from PySide6.QtCore import QTimer
 
@@ -66,11 +67,14 @@ class Game:
                     self.down_key_pressed = False
 
     def gameInit(self):
-        self.size = self.width, self.height = 1000, 720
-        self.src = pygame.display.set_mode([700,520])
-        for row in range(8):
+        self.size = self.width, self.height = 625, 450
+        self.src = pygame.display.set_mode([50,50])
+        self.boards = {"0101010101000002020202020"}
+        #for pawns in range(12):
+            #self.PlayerPawns.append(Pawn())
+        for row in range(5):
             self.grid.append([])
-            for column in range(8):
+            for column in range(5):
                 self.grid[row].append(0)
         self.started = False
 
@@ -83,8 +87,8 @@ class Game:
 
     def render(self):
         self.screen.fill(self.board)
-        for row in range(8):
-            for column in range(8):
+        for row in range(5):
+            for column in range(5):
                 if(row % 2 == 0):
                     if(column % 2 == 1):
                         self.color = self.white
@@ -96,6 +100,27 @@ class Game:
                     else:
                         self.color = self.black
                 pygame.draw.rect(self.src, self.color, [self.width * column, self.height * row , self.width, self.height])
+        counter = 0
+        for c in "0101010101000002020202020":
+            if c == "0":
+                #drawing nothing
+                pass
+            if c == "1":
+                imp = pygame.image.load(self.aiImageSrc).convert()
+                imp = pygame.transform.scale(imp,(75,75))
+                if counter % 2 == 0:
+                    self.src.blit(imp, ((counter % 5) * 75 + (2 * counter), 30))
+                    print(counter)
+                if counter % 2 == 1:
+                    self.src.blit(imp, ((counter % 5) * 75 + (3 * counter), 10))
+            if c == "2":
+                imp = pygame.image.load(self.playerImageSrc).convert()
+                imp = pygame.transform.scale(imp,(75,75))
+                if counter % 2 == 0:
+                    self.src.blit(imp, ((counter % 5) * 75 + (2 * counter), 225))
+                if counter % 2 == 1:
+                    self.src.blit(imp, ((counter % 5) * 75 + (2 * counter), 300))
+            counter += 1
         pygame.display.flip()
 
 class Window(QWidget):
